@@ -65,4 +65,8 @@ on_chroot << EOF
 usermod --pass='*' root
 EOF
 
+on_chroot <<EOF
+apt-mark hold kubelet kubeadm kubectl
+EOF
+
 rm -f "${ROOTFS_DIR}/etc/ssh/"ssh_host_*_key*

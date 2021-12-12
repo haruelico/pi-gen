@@ -2,6 +2,7 @@
 
 install -m 644 files/sources.list "${ROOTFS_DIR}/etc/apt/"
 install -m 644 files/raspi.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
+install -m 644 files/kubernetes-archive-keyring.gpg "${ROOTFS_DIR}/usr/share/keyrings/"
 sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list"
 sed -i "s/RELEASE/${RELEASE}/g" "${ROOTFS_DIR}/etc/apt/sources.list.d/raspi.list"
 
@@ -16,5 +17,12 @@ on_chroot apt-key add - < files/raspberrypi.gpg.key
 on_chroot << EOF
 dpkg --add-architecture armhf
 apt-get update
+apt-get install -y apt-transport-https ca-certificates
 apt-get dist-upgrade -y
+EOF
+
+install -m 644 files/kubernetes.list "${ROOTFS_DIR}/etc/apt/sources.list.d/"
+
+on_chroot << EOF
+apt-get update
 EOF
